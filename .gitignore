@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # ctags
 tags
+
+# fetched by brand/generate.py
+brand/Archivo.ttf
