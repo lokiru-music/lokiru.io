@@ -1,0 +1,146 @@
+---
+/**
+ * Scope — the page's signature.
+ * A live amber trace, drawn as emitted light: a bloom pass under a
+ * hairline pass, gradient-shifted ember -> phosphor across the width.
+ * It is the hero, and it collapses into the 1px signal path that
+ * threads the rest of the page.
+ */
+---
+
+<div class="scope" aria-hidden="true">
+  <canvas data-scope></canvas>
+</div>
+
+<style>
+  .scope {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.8;
+    /* fade the trace out where the headline sits, so type stays first */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 66%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 66%, transparent 100%);
+  }
+  .scope canvas { width: 100%; height: 100%; }
+
+  /* On narrow screens the copy occupies the band the trace runs
+     through, so the trace steps back to being atmosphere. */
+  @media (max-width: 48rem) {
+    .scope { opacity: 0.4; }
+  }
+</style>
+
+<script>
+  const HARMONICS = [
+    { amp: 0.46, freq: 1.0,  speed: 0.16, phase: 0.0 },
+    { amp: 0.24, freq: 2.3,  speed: -0.27, phase: 1.7 },
+    { amp: 0.13, freq: 4.1,  speed: 0.41, phase: 3.2 },
+    { amp: 0.07, freq: 7.7,  speed: -0.63, phase: 0.9 },
+  ];
+
+  function initScope(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let w = 0, h = 0, dpr = 1;
+    let raf = 0;
+    let visible = true;
+
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = Math.max(1, Math.round(r.width));
+      h = Math.max(1, Math.round(r.height));
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function tracePath(t: number, lag = 0, scale = 1, offset = 0) {
+      const mid = h / 2 + offset;
+      // amplitude breathes, and tapers to nothing at both edges
+      const swell = 0.72 + 0.28 * Math.sin((t - lag) * 0.23);
+      const step = Math.max(2, Math.floor(w / 420));
+
+      ctx!.beginPath();
+      for (let x = 0; x <= w; x += step) {
+        const u = x / w;
+        const taper = Math.sin(Math.PI * u) ** 0.85;
+        let y = 0;
+        for (const hm of HARMONICS) {
+          y += hm.amp * Math.sin(u * Math.PI * 2 * hm.freq + hm.phase + (t - lag) * hm.speed);
+        }
+        const py = mid + y * taper * swell * scale * (h * 0.3);
+        x === 0 ? ctx!.moveTo(x, py) : ctx!.lineTo(x, py);
+      }
+    }
+
+    function draw(t: number) {
+      ctx!.clearRect(0, 0, w, h);
+
+      const grad = ctx!.createLinearGradient(0, 0, w, 0);
+      grad.addColorStop(0.0,  '#f5122f');
+      grad.addColorStop(0.3,  '#e95f18');
+      grad.addColorStop(0.55, '#eecc00');
+      grad.addColorStop(0.8,  '#e95f18');
+      grad.addColorStop(1.0,  '#f5122f');
+
+      ctx!.lineJoin = 'round';
+      ctx!.lineCap = 'round';
+
+      // The cold thread: the same signal, running a little behind and
+      // a little quieter — the blue line in the cloth.
+      tracePath(t, 0.55, 0.72, h * 0.055);
+      ctx!.lineWidth = 1;
+      ctx!.strokeStyle = '#1c6fd0';
+      ctx!.globalAlpha = 0.55;
+      ctx!.shadowColor = 'rgba(28,111,208,0.6)';
+      ctx!.shadowBlur = 10;
+      ctx!.stroke();
+
+      // The warm ladder: bloom passes, then the hairline — light, not ink.
+      const passes: Array<[number, number]> = [[9, 0.07], [4, 0.14], [1.35, 0.95]];
+      for (const [width, alpha] of passes) {
+        tracePath(t);
+        ctx!.lineWidth = width;
+        ctx!.strokeStyle = grad;
+        ctx!.globalAlpha = alpha;
+        ctx!.shadowColor = 'rgba(233,95,24,0.5)';
+        ctx!.shadowBlur = width > 2 ? width * 3 : 8;
+        ctx!.stroke();
+      }
+      ctx!.globalAlpha = 1;
+      ctx!.shadowBlur = 0;
+    }
+
+    function loop(now: number) {
+      if (visible) draw(now / 1000);
+      raf = requestAnimationFrame(loop);
+    }
+
+    resize();
+
+    if (reduced) {
+      draw(0);
+    } else {
+      raf = requestAnimationFrame(loop);
+      const io = new IntersectionObserver(
+        ([e]) => { visible = e.isIntersecting; },
+        { threshold: 0 }
+      );
+      io.observe(canvas);
+    }
+
+    let rt: number | undefined;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(rt);
+      rt = window.setTimeout(() => { resize(); if (reduced) draw(0); }, 120);
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLCanvasElement>('canvas[data-scope]')
+    .forEach(initScope);
+</script>

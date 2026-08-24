@@ -1,0 +1,452 @@
+---
+import Base from '../layouts/Base.astro';
+import Scope from '../components/Scope.astro';
+import { getCollection } from 'astro:content';
+
+const packs = (await getCollection('packs')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const plugins = (await getCollection('plugins')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const statusLabel = {
+  available: 'Available',
+  beta: 'Open beta',
+  soon: 'In build',
+} as const;
+---
+
+<Base
+  title="Lokiru — audio plugins, sample packs, records"
+  description="Lokiru builds audio plugins and apps, records sample libraries, and finishes records. Signal in, character out."
+>
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="weave weave--faint" aria-hidden="true"></div>
+    <Scope />
+
+    <div class="wrap hero__in">
+      <p class="label label--hot">Lokiru — software · samples · records</p>
+
+      <h1 class="display hero__h">
+        Signal in.<br /><span class="hero__h-alt">Character out.</span>
+      </h1>
+
+      <p class="lede hero__lede">
+        We build the plugins, cut the sample libraries, and finish the records.{' '}
+        <strong>Three stages of one chain</strong> — take whichever one you need.
+      </p>
+
+      <div class="hero__cta">
+        <a class="btn btn--solid" href="#plugins">Browse the rack</a>
+        <a class="btn btn--ghost" href="#packs">Hear a pack →</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="thread" />
+
+  <!-- ================= 01 SOURCE ================= -->
+  <section class="section" id="packs">
+    <div class="wrap">
+      <div class="stage">
+        <span class="stage__pos">01</span>
+        <span class="stage__name">Source</span>
+        <span class="stage__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="head">
+        <h2 class="h2">Sample<br />packs</h2>
+        <p class="lede">
+          Raw material, recorded on purpose. Everything is played, printed and
+          catalogued here — no scraped libraries, no resold loops.
+        </p>
+      </div>
+
+      <ul class="packs" role="list">
+        {packs.map((p) => (
+          <li class="pack">
+            <span class="pack__thread" aria-hidden="true"></span>
+            <div class="pack__body">
+              <h3 class="pack__title">{p.data.title}</h3>
+              <p class="pack__blurb">{p.data.blurb}</p>
+            </div>
+            <dl class="meta">
+              <div class="meta__row">
+                <dt class="label">Contents</dt>
+                <dd>{p.data.contents}</dd>
+              </div>
+              {p.data.bpm && (
+                <div class="meta__row">
+                  <dt class="label">Tempo</dt>
+                  <dd>{p.data.bpm}</dd>
+                </div>
+              )}
+            </dl>
+            <div class="pack__foot">
+              <span class="price">{p.data.price}</span>
+              <a class="pack__link" href={p.data.url ?? '#contact'}>
+                Get it <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <hr class="thread" />
+
+  <!-- ================= 02 INSERT ================= -->
+  <section class="section section--alt" id="plugins">
+    <div class="weave" aria-hidden="true"></div>
+    <div class="wrap plugins__wrap">
+      <div class="stage">
+        <span class="stage__pos">02</span>
+        <span class="stage__name">Insert</span>
+        <span class="stage__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="head">
+        <h2 class="h2">Plugins<br />&amp; apps</h2>
+        <p class="lede">
+          Where the character gets added. Small tools that do one thing hard,
+          built by people who use them on their own sessions first.
+        </p>
+      </div>
+
+      <ul class="rack" role="list">
+        {plugins.map((p) => (
+          <li class="unit">
+            <div class="unit__id">
+              <p class="label">{p.data.kind}</p>
+              <h3 class="unit__title">{p.data.title}</h3>
+            </div>
+
+            <p class="unit__blurb">{p.data.blurb}</p>
+
+            <div class="unit__specs">
+              <ul class="chips" role="list">
+                {p.data.formats.map((f) => <li class="chip">{f}</li>)}
+              </ul>
+              <span class={`pill pill--${p.data.status}`}>
+                {statusLabel[p.data.status]}
+              </span>
+            </div>
+
+            <div class="unit__buy">
+              <span class="price">{p.data.price}</span>
+              <a class="btn" href={p.data.url ?? '#contact'}>
+                {p.data.status === 'soon' ? 'Get notified' : 'Download'}
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <hr class="thread" />
+
+  <!-- ================= 03 MASTER ================= -->
+  <section class="section" id="studio">
+    <div class="wrap">
+      <div class="stage">
+        <span class="stage__pos">03</span>
+        <span class="stage__name">Master</span>
+        <span class="stage__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="studio">
+        <div>
+          <h2 class="h2">The<br />studio</h2>
+          <p class="lede">
+            We finish records too. Production, mixing, and sound design for
+            artists, labels, and anyone who needs a room that already knows
+            what it sounds like.
+          </p>
+          <p class="studio__cta">
+            <a class="btn btn--solid" href="#contact">Start a project</a>
+          </p>
+        </div>
+
+        <ul class="services" role="list">
+          <li><span class="label">Production</span><p>Writing, arrangement, and tracking, from a voice memo to a master.</p></li>
+          <li><span class="label">Mixing</span><p>In the box or through the desk, depending on what the song is asking for.</p></li>
+          <li><span class="label">Sound design</span><p>Bespoke libraries and one-off instruments for games, film, and records.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section contact" id="contact">
+    <div class="wrap contact__in">
+      <p class="label label--hot">Output</p>
+      <h2 class="display contact__h">Send us<br />something loud</h2>
+      <p class="lede">
+        Demos, licensing, session work, or a bug in one of the plugins — it all
+        arrives in the same inbox and we read every one.
+      </p>
+      <a class="contact__mail" href="mailto:hello@lokiru.io">hello@lokiru.io</a>
+    </div>
+
+    <!-- Closing signature: the mark, woven from the cloth it came from. -->
+    <p class="monogram" aria-hidden="true">LKRU</p>
+  </section>
+</Base>
+
+<style>
+  /* ---------------- hero ---------------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: clamp(34rem, 88svh, 54rem);
+    display: flex;
+    align-items: center;
+    border-bottom: 0;
+  }
+  .hero__in { position: relative; z-index: 2; padding-block: clamp(5rem, 14vh, 9rem); }
+
+  .hero__h {
+    font-size: clamp(2.625rem, 1rem + 7.4vw, 7.25rem);
+    font-variation-settings: 'wdth' 122, 'wght' 900;
+    margin: 1.25rem 0 0;
+  }
+  /* The second line takes the cold thread's colour — the turn in the phrase
+     is the turn in the weave. */
+  .hero__h-alt {
+    background: linear-gradient(92deg, var(--scarlet), var(--ember) 45%, var(--yellow));
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+
+  .hero__lede { margin-top: clamp(1.25rem, 3vw, 1.9rem); max-width: 44ch; }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  /* ---------------- shared section head ---------------- */
+  .head {
+    display: grid;
+    gap: clamp(1.25rem, 4vw, 3rem);
+    grid-template-columns: 1fr;
+    align-items: end;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  @media (min-width: 52rem) {
+    .head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+
+  .price {
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--yellow);
+  }
+
+  /* ---------------- 01 packs ---------------- */
+  .packs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border-block: 1px solid var(--line);
+  }
+  @media (min-width: 46rem) { .packs { grid-template-columns: repeat(3, 1fr); } }
+
+  .pack {
+    position: relative;
+    background: var(--void);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: background 200ms ease;
+  }
+  .pack:hover { background: var(--panel); }
+
+  /* each card carries one thread of the cloth across its top edge */
+  .pack__thread {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--scarlet), var(--ember) 55%, var(--yellow));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .pack:hover .pack__thread,
+  .pack:focus-within .pack__thread { transform: scaleX(1); }
+
+  .pack__body { flex: 1; }
+  .pack__title {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 108, 'wght' 800;
+    font-size: 1.5rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.6rem;
+  }
+  .pack__blurb { margin: 0; color: var(--ash); font-size: 0.9375rem; line-height: 1.55; }
+
+  .meta { margin: 0; display: grid; gap: 0.55rem; }
+  .meta__row { display: grid; gap: 0.15rem; }
+  .meta__row dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    color: var(--bone);
+  }
+
+  .pack__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .pack__link {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ash);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .pack:hover .pack__link, .pack__link:hover { color: var(--yellow); }
+
+  /* ---------------- 02 rack ---------------- */
+  .plugins__wrap { position: relative; z-index: 2; }
+
+  .rack { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); }
+
+  .unit {
+    background: var(--void-2);
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    transition: background 200ms ease;
+  }
+  .unit:hover { background: var(--panel); }
+  @media (min-width: 60rem) {
+    .unit {
+      grid-template-columns: 14rem minmax(0, 1fr) auto auto;
+      gap: 2.5rem;
+    }
+  }
+
+  .unit__id .label { margin-bottom: 0.4rem; }
+  .unit__title {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 114, 'wght' 800;
+    font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .unit__blurb { margin: 0; color: var(--ash); max-width: 44ch; }
+
+  .unit__specs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+  .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    color: var(--ash);
+    border: 1px solid var(--line);
+    padding: 0.2rem 0.5rem;
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.55rem;
+    border: 1px solid currentColor;
+  }
+  .pill--available { color: var(--yellow); }
+  .pill--beta      { color: var(--cobalt); }
+  .pill--soon      { color: var(--ash-dim); }
+
+  .unit__buy { display: flex; align-items: center; gap: 1.25rem; }
+
+  /* ---------------- 03 studio ---------------- */
+  .studio { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
+  @media (min-width: 56rem) {
+    .studio { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+  .studio__cta { margin: clamp(1.75rem, 4vw, 2.5rem) 0 0; }
+
+  .services { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .services li {
+    padding-block: clamp(1.25rem, 3vw, 1.75rem);
+    border-top: 1px solid var(--line);
+  }
+  .services li:last-child { border-bottom: 1px solid var(--line); }
+  .services .label { display: block; margin-bottom: 0.5rem; color: var(--ember); }
+  .services p { margin: 0; color: var(--ash); max-width: 42ch; }
+
+  /* ---------------- contact ---------------- */
+  .contact { position: relative; overflow: hidden; }
+  .contact__in { position: relative; z-index: 2; }
+  .contact__h {
+    font-size: clamp(2.5rem, 1.2rem + 7vw, 6rem);
+    font-variation-settings: 'wdth' 120, 'wght' 900;
+    margin: 1rem 0 1.75rem;
+  }
+  .contact__mail {
+    display: inline-block;
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: clamp(1rem, 0.85rem + 0.9vw, 1.5rem);
+    color: var(--yellow);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-hot);
+    padding-bottom: 0.35rem;
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+  .contact__mail:hover { color: var(--bone); border-color: var(--yellow); }
+
+  /* The mark, filled with the tartan it was drawn from. Bleeds off the
+     bottom edge so it reads as cloth continuing past the page. */
+  .monogram {
+    margin: clamp(2.5rem, 7vw, 4rem) 0 -0.16em;
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 125, 'wght' 900;
+    font-size: clamp(5rem, 21vw, 20rem);
+    line-height: 0.78;
+    letter-spacing: 0.02em;
+    text-align: center;
+    user-select: none;
+    background-color: var(--scarlet);
+    background-image:
+      repeating-linear-gradient(90deg,
+        rgba(0,0,0,0.55) 0 6px, transparent 6px 34px,
+        rgba(238,204,0,0.9) 34px 38px, transparent 38px 52px,
+        rgba(28,111,208,0.85) 52px 55px, transparent 55px 96px),
+      repeating-linear-gradient(0deg,
+        rgba(0,0,0,0.55) 0 6px, transparent 6px 34px,
+        rgba(233,95,24,0.85) 34px 40px, transparent 40px 52px,
+        rgba(28,111,208,0.7) 52px 55px, transparent 55px 96px);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+</style>

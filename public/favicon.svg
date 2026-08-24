@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0b0c10"/>
+  <!-- warp -->
+  <rect x="5"  y="0" width="4" height="32" fill="#f5122f"/>
+  <rect x="14" y="0" width="7" height="32" fill="#e95f18"/>
+  <rect x="24" y="0" width="2" height="32" fill="#eecc00"/>
+  <rect x="29" y="0" width="1" height="32" fill="#1c6fd0"/>
+  <!-- weft -->
+  <rect x="0" y="5"  width="32" height="4" fill="#f5122f" opacity=".72"/>
+  <rect x="0" y="14" width="32" height="7" fill="#e95f18" opacity=".72"/>
+  <rect x="0" y="24" width="32" height="2" fill="#eecc00" opacity=".85"/>
+  <rect x="0" y="29" width="32" height="1" fill="#1c6fd0" opacity=".85"/>
+</svg>

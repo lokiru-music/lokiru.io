@@ -1,0 +1,265 @@
+/* ============================================================
+   Lokiru — woven
+   Palette lifted from the LKRU tartan: a scarlet field, a warm
+   ladder of red-orange -> amber -> yellow, and one cold cobalt
+   thread cutting across it. Black is the ground, not the subject.
+   ============================================================ */
+
+:root {
+  /* --- ground --- */
+  --void:      #0b0c10;   /* page */
+  --void-2:    #101117;   /* alternate band */
+  --panel:     #16181f;   /* raised card */
+  --oxblood:   #5e1a20;   /* red over black, as in the weave */
+  --line:      #23252e;   /* hairline, cold */
+  --line-hot:  #5a2113;   /* hairline, lit */
+
+  /* --- the warm ladder --- */
+  --scarlet:   #f5122f;   /* dominant thread */
+  --ember:     #e95f18;   /* red-orange */
+  --amber:     #e49500;
+  --yellow:    #eecc00;   /* peak */
+
+  /* --- the cold thread --- */
+  --cobalt:    #1c6fd0;
+  --cobalt-lo: #0f4a91;
+
+  /* --- type --- */
+  --bone:      #f2ede6;   /* primary text */
+  --ash:       #918d94;   /* secondary */
+  --ash-dim:   #5f5c66;   /* tertiary / rules */
+
+  --glow: 0 0 24px rgba(245, 18, 47, 0.35);
+
+  /* --- type roles --- */
+  --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:    'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* --- measure --- */
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --max:    76rem;
+  --rail:   3.5rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.075rem);
+  line-height: 1.6;
+  font-variation-settings: 'wdth' 100;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg, canvas { display: block; max-width: 100%; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection { background: var(--ember); color: #000; }
+
+/* ---------- type roles ---------- */
+
+.display {
+  font-family: var(--display);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 118, 'wght' 800;
+  line-height: 0.88;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Panel silkscreen: every label, stage marker and readout on the
+   page is set in mono, the way hardware actually labels itself. */
+.label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ash);
+  margin: 0;
+}
+.label--hot { color: var(--amber); }
+
+.lede {
+  font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.3125rem);
+  line-height: 1.5;
+  color: var(--ash);
+  max-width: 34ch;
+  margin: 0;
+}
+.lede strong { color: var(--bone); font-weight: 600; }
+
+/* ---------- layout ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section { position: relative; padding-block: clamp(4.5rem, 10vw, 8.5rem); }
+.section--alt { background: var(--void-2); }
+
+.rule {
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  margin: 0;
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.9rem 1.4rem;
+  border: 1px solid var(--line-hot);
+  background: transparent;
+  color: var(--amber);
+  transition: background 180ms ease, color 180ms ease,
+              border-color 180ms ease, box-shadow 180ms ease;
+}
+.btn:hover {
+  color: #000;
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: var(--glow);
+}
+
+.btn--solid {
+  color: #12080a;
+  border-color: var(--ember);
+  background: linear-gradient(100deg, var(--scarlet), var(--ember));
+}
+.btn--solid:hover {
+  background: linear-gradient(100deg, var(--ember), var(--amber));
+  border-color: var(--yellow);
+}
+
+.btn--ghost { border-color: transparent; padding-inline: 0.25rem; color: var(--ash); }
+.btn--ghost:hover { background: none; box-shadow: none; color: var(--yellow); }
+
+/* ============================================================
+   The weave
+   A tartan is a regular set of verticals crossed by a regular set
+   of horizontals, with the accent threads landing on a repeat.
+   Used here at low contrast as ground texture, and at full
+   strength as the divider between stages.
+   ============================================================ */
+
+.weave {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    /* the cold thread, on a wide repeat */
+    linear-gradient(90deg, var(--cobalt) 0 1px, transparent 1px 100%),
+    /* warm companions, tight pair, as in the cloth */
+    linear-gradient(90deg, var(--ember) 0 1px, transparent 1px 100%),
+    linear-gradient(90deg, var(--amber) 0 1px, transparent 1px 100%);
+  background-size: 240px 100%, 240px 100%, 240px 100%;
+  background-position: 0 0, 12px 0, 17px 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 65%, transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 65%, transparent);
+}
+.weave--faint { opacity: 0.16; }
+
+/* A single crossing of the weave, used to separate stages. */
+.thread {
+  position: relative;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--line);
+}
+.thread::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* one full sett of the cloth, repeated — a woven thread, not a bar */
+  background: repeating-linear-gradient(
+    90deg,
+    var(--scarlet)  0 26px,
+    var(--oxblood) 26px 34px,
+    var(--ember)   34px 46px,
+    var(--oxblood) 46px 52px,
+    var(--yellow)  52px 56px,
+    var(--oxblood) 56px 74px,
+    var(--cobalt)  74px 77px,
+    var(--oxblood) 77px 104px
+  );
+  opacity: 0.38;
+}
+
+/* Stage marker: the structural device. Each section of this site is
+   a stage in a signal chain, because the business actually is one —
+   packs are the source, plugins are the insert, the studio is the
+   master bus. The numbering is a chain, not decoration. */
+.stage {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+}
+.stage__pos {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--scarlet);
+}
+.stage__name {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.stage__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-hot), transparent);
+}
+
+.h2 {
+  font-family: var(--display);
+  font-variation-settings: 'wdth' 112, 'wght' 800;
+  font-size: clamp(2rem, 1.4rem + 3.2vw, 3.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}

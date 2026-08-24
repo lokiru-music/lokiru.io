@@ -1,0 +1,95 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div class="foot__brand">
+      <!-- End of the signal path: the output jack. -->
+      <span class="jack" aria-hidden="true"><span class="jack__pin"></span></span>
+      <div>
+        <p class="foot__word">LKRU</p>
+        <p class="label">Output</p>
+      </div>
+    </div>
+
+    <nav class="foot__nav" aria-label="Footer">
+      <a href="/#packs">Sample packs</a>
+      <a href="/#plugins">Plugins &amp; apps</a>
+      <a href="/#studio">Studio</a>
+      <a href="mailto:hello@lokiru.io">hello@lokiru.io</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot__legal">
+    <p class="label">© {year} Lokiru</p>
+    <p class="label">Built for people who make noise</p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+  }
+  .foot__in {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .foot__brand { display: flex; align-items: center; gap: 1rem; }
+
+  .jack {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-hot);
+    background: radial-gradient(circle, rgba(245,18,47,0.14), transparent 70%);
+    display: grid;
+    place-items: center;
+    flex: none;
+  }
+  .jack__pin {
+    width: 0.8125rem;
+    height: 0.8125rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--phosphor), var(--ember) 70%);
+    box-shadow: 0 0 14px rgba(245, 18, 47, 0.5);
+  }
+
+  .foot__word {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 125, 'wght' 900;
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 0.2rem;
+  }
+
+  .foot__nav {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .foot__nav a {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    color: var(--ash);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .foot__nav a:hover { color: var(--phosphor); }
+
+  .foot__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .foot__legal .label { color: var(--ash-dim); }
+</style>
