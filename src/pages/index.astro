@@ -3,10 +3,10 @@ import Base from '../layouts/Base.astro';
 import Scope from '../components/Scope.astro';
 import { getCollection } from 'astro:content';
 
-const packs = (await getCollection('packs')).sort(
+const software = (await getCollection('software')).sort(
   (a, b) => a.data.order - b.data.order
 );
-const plugins = (await getCollection('plugins')).sort(
+const packs = (await getCollection('packs')).sort(
   (a, b) => a.data.order - b.data.order
 );
 
@@ -15,11 +15,14 @@ const statusLabel = {
   beta: 'Open beta',
   soon: 'In build',
 } as const;
+
+const PACKS_URL = 'https://drews.studio/';
+const PARTNER_URL = 'https://msxaudio.com/';
 ---
 
 <Base
-  title="Lokiru — audio plugins, sample packs, records"
-  description="Lokiru builds audio plugins and apps, records sample libraries, and finishes records. Signal in, character out."
+  title="Lokiru — software for people who play"
+  description="Lokiru makes small, sharp music software: a polyrhythm metronome, a transcription app for macOS, and Valvetrain, a live performance suite."
 >
   <!-- ================= HERO ================= -->
   <section class="hero">
@@ -27,119 +30,77 @@ const statusLabel = {
     <Scope />
 
     <div class="wrap hero__in">
-      <p class="label label--hot">Lokiru — software · samples · records</p>
+      <p class="label label--hot">Lokiru — music software</p>
 
       <h1 class="display hero__h">
-        Signal in.<br /><span class="hero__h-alt">Character out.</span>
+        Tools for<br /><span class="hero__h-alt">people who play.</span>
       </h1>
 
       <p class="lede hero__lede">
-        We build the plugins, cut the sample libraries, and finish the records.{' '}
-        <strong>Three stages of one chain</strong> — take whichever one you need.
+        Small, sharp software for practice, transcription and the stage —{' '}
+        <strong>plus a shelf of horn libraries</strong> recorded with MSXII Sound.
       </p>
 
       <div class="hero__cta">
-        <a class="btn btn--solid" href="#plugins">Browse the rack</a>
-        <a class="btn btn--ghost" href="#packs">Hear a pack →</a>
+        <a class="btn btn--solid" href="#software">Browse the rack</a>
+        <a class="btn btn--ghost" href="#packs">See the libraries →</a>
       </div>
     </div>
   </section>
 
   <hr class="thread" />
 
-  <!-- ================= 01 SOURCE ================= -->
-  <section class="section" id="packs">
-    <div class="wrap">
+  <!-- ================= 01 RACK ================= -->
+  <section class="section section--alt" id="software">
+    <div class="weave" aria-hidden="true"></div>
+    <div class="wrap rack__wrap">
       <div class="stage">
         <span class="stage__pos">01</span>
-        <span class="stage__name">Source</span>
+        <span class="stage__name">Rack</span>
         <span class="stage__line" aria-hidden="true"></span>
       </div>
 
       <div class="head">
-        <h2 class="h2">Sample<br />packs</h2>
+        <h2 class="h2">Software</h2>
         <p class="lede">
-          Raw material, recorded on purpose. Everything is played, printed and
-          catalogued here — no scraped libraries, no resold loops.
-        </p>
-      </div>
-
-      <ul class="packs" role="list">
-        {packs.map((p) => (
-          <li class="pack">
-            <span class="pack__thread" aria-hidden="true"></span>
-            <div class="pack__body">
-              <h3 class="pack__title">{p.data.title}</h3>
-              <p class="pack__blurb">{p.data.blurb}</p>
-            </div>
-            <dl class="meta">
-              <div class="meta__row">
-                <dt class="label">Contents</dt>
-                <dd>{p.data.contents}</dd>
-              </div>
-              {p.data.bpm && (
-                <div class="meta__row">
-                  <dt class="label">Tempo</dt>
-                  <dd>{p.data.bpm}</dd>
-                </div>
-              )}
-            </dl>
-            <div class="pack__foot">
-              <span class="price">{p.data.price}</span>
-              <a class="pack__link" href={p.data.url ?? '#contact'}>
-                Get it <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <hr class="thread" />
-
-  <!-- ================= 02 INSERT ================= -->
-  <section class="section section--alt" id="plugins">
-    <div class="weave" aria-hidden="true"></div>
-    <div class="wrap plugins__wrap">
-      <div class="stage">
-        <span class="stage__pos">02</span>
-        <span class="stage__name">Insert</span>
-        <span class="stage__line" aria-hidden="true"></span>
-      </div>
-
-      <div class="head">
-        <h2 class="h2">Plugins<br />&amp; apps</h2>
-        <p class="lede">
-          Where the character gets added. Small tools that do one thing hard,
-          built by people who use them on their own sessions first.
+          Small tools that do one thing hard. One is finished and free to use
+          right now; two are still on the bench.
         </p>
       </div>
 
       <ul class="rack" role="list">
-        {plugins.map((p) => (
+        {software.map((s) => (
           <li class="unit">
             <div class="unit__id">
-              <p class="label">{p.data.kind}</p>
-              <h3 class="unit__title">{p.data.title}</h3>
+              <p class="label">{s.data.kind}</p>
+              <h3 class="unit__title">{s.data.title}</h3>
             </div>
 
-            <p class="unit__blurb">{p.data.blurb}</p>
+            <div class="unit__mid">
+              <p class="unit__blurb">{s.data.blurb}</p>
+              {s.data.modules.length > 0 && (
+                <ul class="modules" role="list">
+                  {s.data.modules.map((m) => <li>{m}</li>)}
+                </ul>
+              )}
+            </div>
 
             <div class="unit__specs">
               <ul class="chips" role="list">
-                {p.data.formats.map((f) => <li class="chip">{f}</li>)}
+                {s.data.formats.map((f) => <li class="chip">{f}</li>)}
               </ul>
-              <span class={`pill pill--${p.data.status}`}>
-                {statusLabel[p.data.status]}
+              <span class={`pill pill--${s.data.status}`}>
+                {statusLabel[s.data.status]}
               </span>
             </div>
 
             <div class="unit__buy">
-              <span class="price">{p.data.price}</span>
-              <a class="btn" href={p.data.url ?? '#contact'}>
-                {p.data.status === 'soon' ? 'Get notified' : 'Download'}
-              </a>
+              {s.data.price && <span class="price">{s.data.price}</span>}
+              {s.data.url ? (
+                <a class="btn" href={s.data.url}>Open it</a>
+              ) : (
+                <a class="btn" href="#contact">Get told when it ships</a>
+              )}
             </div>
           </li>
         ))}
@@ -149,33 +110,38 @@ const statusLabel = {
 
   <hr class="thread" />
 
-  <!-- ================= 03 MASTER ================= -->
-  <section class="section" id="studio">
+  <!-- ================= 02 LIBRARY ================= -->
+  <section class="section" id="packs">
     <div class="wrap">
       <div class="stage">
-        <span class="stage__pos">03</span>
-        <span class="stage__name">Master</span>
+        <span class="stage__pos">02</span>
+        <span class="stage__name">Library</span>
         <span class="stage__line" aria-hidden="true"></span>
       </div>
 
-      <div class="studio">
-        <div>
-          <h2 class="h2">The<br />studio</h2>
+      <div class="lib">
+        <div class="lib__intro">
+          <h2 class="h2">Horn<br />libraries</h2>
           <p class="lede">
-            We finish records too. Production, mixing, and sound design for
-            artists, labels, and anyone who needs a room that already knows
-            what it sounds like.
+            Seven brass packs, played and recorded in collaboration with{' '}
+            <a class="ilink" href={PARTNER_URL}>MSXII Sound</a>. They live over at
+            Drew's Studio, along with everything else.
           </p>
-          <p class="studio__cta">
-            <a class="btn btn--solid" href="#contact">Start a project</a>
+          <p class="lib__cta">
+            <a class="btn btn--solid" href={PACKS_URL}>Browse the libraries</a>
           </p>
         </div>
 
-        <ul class="services" role="list">
-          <li><span class="label">Production</span><p>Writing, arrangement, and tracking, from a voice memo to a master.</p></li>
-          <li><span class="label">Mixing</span><p>In the box or through the desk, depending on what the song is asking for.</p></li>
-          <li><span class="label">Sound design</span><p>Bespoke libraries and one-off instruments for games, film, and records.</p></li>
-        </ul>
+        <ol class="lib__list" role="list">
+          {packs.map((p) => (
+            <li class="lib__item">
+              <a href={p.data.url ?? PACKS_URL}>
+                <span class="lib__name">{p.data.title}</span>
+                <span class="lib__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   </section>
@@ -186,8 +152,8 @@ const statusLabel = {
       <p class="label label--hot">Output</p>
       <h2 class="display contact__h">Send us<br />something loud</h2>
       <p class="lede">
-        Demos, licensing, session work, or a bug in one of the plugins — it all
-        arrives in the same inbox and we read every one.
+        Licensing, session work, a bug in the metronome, or first dibs on
+        Valvetrain — it all arrives in the same inbox.
       </p>
       <a class="contact__mail" href="mailto:hello@lokiru.io">hello@lokiru.io</a>
     </div>
@@ -205,7 +171,6 @@ const statusLabel = {
     min-height: clamp(34rem, 88svh, 54rem);
     display: flex;
     align-items: center;
-    border-bottom: 0;
   }
   .hero__in { position: relative; z-index: 2; padding-block: clamp(5rem, 14vh, 9rem); }
 
@@ -214,8 +179,6 @@ const statusLabel = {
     font-variation-settings: 'wdth' 122, 'wght' 900;
     margin: 1.25rem 0 0;
   }
-  /* The second line takes the cold thread's colour — the turn in the phrase
-     is the turn in the weave. */
   .hero__h-alt {
     background: linear-gradient(92deg, var(--scarlet), var(--ember) 45%, var(--yellow));
     -webkit-background-clip: text;
@@ -233,11 +196,10 @@ const statusLabel = {
     margin-top: clamp(2rem, 5vw, 3rem);
   }
 
-  /* ---------------- shared section head ---------------- */
+  /* ---------------- shared ---------------- */
   .head {
     display: grid;
     gap: clamp(1.25rem, 4vw, 3rem);
-    grid-template-columns: 1fr;
     align-items: end;
     margin-bottom: clamp(2.5rem, 6vw, 4rem);
   }
@@ -252,85 +214,11 @@ const statusLabel = {
     color: var(--yellow);
   }
 
-  /* ---------------- 01 packs ---------------- */
-  .packs {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1px;
-    background: var(--line);
-    border-block: 1px solid var(--line);
-  }
-  @media (min-width: 46rem) { .packs { grid-template-columns: repeat(3, 1fr); } }
+  .ilink { color: var(--yellow); text-decoration-color: var(--line-hot); }
+  .ilink:hover { text-decoration-color: var(--yellow); }
 
-  .pack {
-    position: relative;
-    background: var(--void);
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    transition: background 200ms ease;
-  }
-  .pack:hover { background: var(--panel); }
-
-  /* each card carries one thread of the cloth across its top edge */
-  .pack__thread {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--scarlet), var(--ember) 55%, var(--yellow));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .pack:hover .pack__thread,
-  .pack:focus-within .pack__thread { transform: scaleX(1); }
-
-  .pack__body { flex: 1; }
-  .pack__title {
-    font-family: var(--display);
-    font-variation-settings: 'wdth' 108, 'wght' 800;
-    font-size: 1.5rem;
-    line-height: 1.05;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    margin: 0 0 0.6rem;
-  }
-  .pack__blurb { margin: 0; color: var(--ash); font-size: 0.9375rem; line-height: 1.55; }
-
-  .meta { margin: 0; display: grid; gap: 0.55rem; }
-  .meta__row { display: grid; gap: 0.15rem; }
-  .meta__row dd {
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 0.8125rem;
-    color: var(--bone);
-  }
-
-  .pack__foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
-  }
-  .pack__link {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ash);
-    text-decoration: none;
-    transition: color 160ms ease;
-  }
-  .pack:hover .pack__link, .pack__link:hover { color: var(--yellow); }
-
-  /* ---------------- 02 rack ---------------- */
-  .plugins__wrap { position: relative; z-index: 2; }
+  /* ---------------- 01 rack ---------------- */
+  .rack__wrap { position: relative; z-index: 2; }
 
   .rack { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); }
 
@@ -343,7 +231,7 @@ const statusLabel = {
     transition: background 200ms ease;
   }
   .unit:hover { background: var(--panel); }
-  @media (min-width: 60rem) {
+  @media (min-width: 62rem) {
     .unit {
       grid-template-columns: 14rem minmax(0, 1fr) auto auto;
       gap: 2.5rem;
@@ -360,7 +248,36 @@ const statusLabel = {
     letter-spacing: -0.015em;
     margin: 0;
   }
-  .unit__blurb { margin: 0; color: var(--ash); max-width: 44ch; }
+
+  .unit__mid { display: grid; gap: 0.9rem; }
+  .unit__blurb { margin: 0; color: var(--ash); max-width: 46ch; }
+
+  /* The parts of a suite, listed as the panel would list them. */
+  .modules {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+  }
+  .modules li {
+    position: relative;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--bone);
+    padding-left: 0.85rem;
+  }
+  .modules li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 5px;
+    height: 5px;
+    background: var(--ember);
+  }
 
   .unit__specs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
   .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; }
@@ -380,6 +297,7 @@ const statusLabel = {
     text-transform: uppercase;
     padding: 0.25rem 0.55rem;
     border: 1px solid currentColor;
+    white-space: nowrap;
   }
   .pill--available { color: var(--yellow); }
   .pill--beta      { color: var(--cobalt); }
@@ -387,21 +305,48 @@ const statusLabel = {
 
   .unit__buy { display: flex; align-items: center; gap: 1.25rem; }
 
-  /* ---------------- 03 studio ---------------- */
-  .studio { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
+  /* ---------------- 02 library ---------------- */
+  .lib { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
   @media (min-width: 56rem) {
-    .studio { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .lib { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
   }
-  .studio__cta { margin: clamp(1.75rem, 4vw, 2.5rem) 0 0; }
+  .lib__cta { margin: clamp(1.75rem, 4vw, 2.5rem) 0 0; }
 
-  .services { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-  .services li {
-    padding-block: clamp(1.25rem, 3vw, 1.75rem);
-    border-top: 1px solid var(--line);
+  .lib__list { list-style: none; margin: 0; padding: 0; counter-reset: lib; }
+  .lib__item { counter-increment: lib; border-top: 1px solid var(--line); }
+  .lib__item:last-child { border-bottom: 1px solid var(--line); }
+
+  .lib__item a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: clamp(0.9rem, 2.2vw, 1.15rem);
+    text-decoration: none;
+    transition: color 160ms ease;
   }
-  .services li:last-child { border-bottom: 1px solid var(--line); }
-  .services .label { display: block; margin-bottom: 0.5rem; color: var(--ember); }
-  .services p { margin: 0; color: var(--ash); max-width: 42ch; }
+  .lib__item a::before {
+    content: counter(lib, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    color: var(--ash-dim);
+    flex: none;
+  }
+  .lib__name {
+    font-family: var(--display);
+    font-variation-settings: 'wdth' 106, 'wght' 700;
+    font-size: clamp(1.0625rem, 0.9rem + 0.6vw, 1.3125rem);
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    flex: 1;
+  }
+  .lib__arrow {
+    font-family: var(--mono);
+    color: var(--ash-dim);
+    transition: transform 200ms ease, color 200ms ease;
+  }
+  .lib__item a:hover { color: var(--yellow); }
+  .lib__item a:hover .lib__arrow { color: var(--yellow); transform: translateX(4px); }
 
   /* ---------------- contact ---------------- */
   .contact { position: relative; overflow: hidden; }
@@ -424,8 +369,6 @@ const statusLabel = {
   }
   .contact__mail:hover { color: var(--bone); border-color: var(--yellow); }
 
-  /* The mark, filled with the tartan it was drawn from. Bleeds off the
-     bottom edge so it reads as cloth continuing past the page. */
   .monogram {
     margin: clamp(2.5rem, 7vw, 4rem) 0 -0.16em;
     font-family: var(--display);

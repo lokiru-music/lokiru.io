@@ -1,6 +1,7 @@
 # lokiru.io
 
-Marketing site for Lokiru — audio plugins and apps, sample packs, and production.
+Marketing site for Lokiru — music software, plus the horn libraries recorded
+with MSXII Sound.
 Astro (static) deployed to GitHub Pages at the apex domain `lokiru.io`.
 
 ## Run it
@@ -16,37 +17,35 @@ npm run preview   # serve the built output
 Everything on the page comes from Markdown in `src/content/`. Add a file, it
 appears; delete a file, it disappears. Order is controlled by `order:`.
 
-**A sample pack** — `src/content/packs/<slug>.md`
+**Software** — `src/content/software/<slug>.md`
 
 ```markdown
 ---
-title: Tape Room
+title: Valvetrain
+kind: Live performance suite   # what it is, in the reader's words
 blurb: One sentence, said plainly.
-contents: 24-bit WAV · 120 loops · 80 one-shots
-bpm: 82–104          # optional
-price: $39
-url: https://...     # optional; falls back to the contact section
+modules: [Harmonizer, Looper, Plate reverb]   # optional; parts of a suite
+formats: [macOS]                              # optional
+price: Free                                   # optional — omit until priced
+url: https://...                              # optional; without it the
+status: soon                                  #   button points at contact
+order: 3                                      # available | beta | soon
+---
+```
+
+**A horn library** — `src/content/packs/<slug>.md`
+
+```markdown
+---
+title: Vintage Soul Horns
+url: https://...     # optional; defaults to drews.studio
 order: 1
 ---
 ```
 
-**A plugin or app** — `src/content/plugins/<slug>.md`
-
-```markdown
----
-title: Ferrite
-kind: Tape saturator
-blurb: One sentence, said plainly.
-formats: [VST3, AU, AAX]
-price: $79
-status: available    # available | beta | soon
-url: https://...     # optional
-order: 1
----
-```
-
-The three packs and three plugins currently in there are **placeholders** —
-replace them with the real catalogue.
+The seven packs link out to Drew's Studio as a group — neither that site nor
+MSXII's storefront exposes per-pack product URLs. If you get direct links, drop
+one into each file's `url:` and the list will use them.
 
 ## Design
 
@@ -55,8 +54,8 @@ a scarlet field, a warm ladder of red-orange → amber → yellow, and one cold
 cobalt thread cutting across it. Tokens live at the top of
 `src/styles/global.css`; change them there and the whole site follows.
 
-The page is structured as a signal chain — 01 Source (packs), 02 Insert
-(plugins), 03 Master (studio) — because the business actually is one.
+The page runs 01 Rack (software) then 02 Library (horn packs), ending on
+Output (contact). Both stage names are real audio terms, not decoration.
 
 Type is Archivo (using its width axis for display vs. body) with IBM Plex Mono
 for every panel label and readout.
